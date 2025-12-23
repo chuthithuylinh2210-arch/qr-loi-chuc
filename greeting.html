@@ -4,59 +4,94 @@
 <meta charset="utf-8">
 <title>Lời chúc Noel</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <style>
+/* ===== NỀN CHUNG ===== */
 body{
-  margin:0;overflow:hidden;
+  margin:0;
+  overflow:hidden;
   background:linear-gradient(#0b1020,#000);
-  font-family:system-ui;color:#fff
+  font-family:system-ui;
+  color:#fff;
 }
-#fx{position:fixed;inset:0;pointer-events:none}
+
+/* ===== CANVAS TUYẾT + PHÁO HOA (Ở DƯỚI) ===== */
+#fx{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;          /* 👈 QUAN TRỌNG */
+}
+
+/* ===== NỘI DUNG (Ở TRÊN CANVAS) ===== */
 .center{
-  position:absolute;inset:0;
-  display:grid;place-items:center;text-align:center
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  z-index:1;          /* 👈 QUAN TRỌNG */
 }
+
+/* ===== CARD ===== */
 .card{
-  background:rgba(255,255,255,.08);
-  padding:24px;border-radius:22px;
+  background:rgba(255,255,255,.9);
+  padding:24px;
+  border-radius:22px;
   box-shadow:0 30px 80px rgba(0,0,0,.7);
-  max-width:520px
+  max-width:520px;
 }
+
+/* ===== CÂY THÔNG ===== */
 .tree{
   font-size:96px;
-  animation:shake 3s infinite ease-in-out
+  animation:shake 3s infinite ease-in-out;
 }
 @keyframes shake{
   0%,100%{transform:rotate(0)}
   50%{transform:rotate(4deg)}
 }
-button{
+
+/* ===== LỜI CHÚC ===== */
+.message{
   margin-top:14px;
-  padding:10px 18px;border-radius:14px;
-  border:none;background:#22c55e;
-  color:#000;font-weight:700;cursor:pointer
-}
-.gift{
-  position:absolute;font-size:32px;
-  animation:fall linear forwards
-}
-@keyframes fall{
-  to{transform:translateY(120vh)}
-  .message{
-  margin-top:12px;
   font-size:18px;
-  color:#0b1020;        /* CHỮ ĐEN */
-  background:#ffffff;  /* NỀN TRẮNG */
+  color:#0b1020;      /* 👈 CHỮ ĐEN */
+  background:#ffffff;
   padding:12px 16px;
   border-radius:14px;
 }
 
+/* ===== NÚT NHẠC ===== */
+button{
+  margin-top:14px;
+  padding:10px 18px;
+  border-radius:14px;
+  border:none;
+  background:#22c55e;
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* ===== QUÀ RƠI ===== */
+.gift{
+  position:absolute;
+  font-size:32px;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(120vh)}
 }
 </style>
 </head>
+
 <body>
 
+<!-- CANVAS HIỆU ỨNG -->
 <canvas id="fx"></canvas>
 
+<!-- NỘI DUNG -->
 <div class="center">
   <div class="card">
     <div class="tree">🎄</div>
@@ -66,28 +101,33 @@ button{
   </div>
 </div>
 
+<!-- NHẠC -->
 <audio id="music" loop>
   <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_3e6c65fd19.mp3">
 </audio>
 
 <script>
-// 🎁 HIỆN LỜI CHÚC
+/* ===== HIỆN LỜI CHÚC ===== */
 const params = new URLSearchParams(location.search);
 document.getElementById("msg").textContent =
   params.get("m") || "Chúc bạn Giáng Sinh an lành 🎄";
 
-// 🎶 NHẠC (autoplay bị chặn → cần nút)
+/* ===== NHẠC ===== */
 const music = document.getElementById("music");
 function playMusic(){ music.play(); }
 
-// CANVAS
+/* ===== CANVAS SETUP ===== */
 const c = document.getElementById("fx");
 const ctx = c.getContext("2d");
 let w,h;
-function resize(){ w=c.width=innerWidth; h=c.height=innerHeight }
-resize(); window.onresize = resize;
+function resize(){
+  w = c.width = window.innerWidth;
+  h = c.height = window.innerHeight;
+}
+resize();
+window.onresize = resize;
 
-// ❄️ TUYẾT
+/* ===== TUYẾT ===== */
 let snow=[];
 for(let i=0;i<140;i++){
   snow.push({
@@ -100,8 +140,6 @@ for(let i=0;i<140;i++){
 
 function draw(){
   ctx.clearRect(0,0,w,h);
-
-  // tuyết
   ctx.fillStyle="white";
   snow.forEach(f=>{
     ctx.beginPath();
@@ -110,12 +148,11 @@ function draw(){
     f.y+=f.s;
     if(f.y>h) f.y=0;
   });
-
   requestAnimationFrame(draw);
 }
 draw();
 
-// ✨ PHÁO HOA KHI MỞ TRANG
+/* ===== PHÁO HOA KHI MỞ ===== */
 for(let i=0;i<90;i++){
   setTimeout(()=>{
     ctx.fillStyle=`hsl(${Math.random()*360},100%,70%)`;
@@ -125,9 +162,9 @@ for(let i=0;i<90;i++){
   },i*30);
 }
 
-// 🎁 QUÀ RƠI KHI CHẠM
-document.body.onclick=()=>{
-  const g=document.createElement("div");
+/* ===== QUÀ RƠI KHI CHẠM ===== */
+document.body.onclick = ()=>{
+  const g = document.createElement("div");
   g.className="gift";
   g.textContent="🎁";
   g.style.left=Math.random()*innerWidth+"px";
@@ -137,6 +174,6 @@ document.body.onclick=()=>{
   setTimeout(()=>g.remove(),4000);
 };
 </script>
+
 </body>
 </html>
-
