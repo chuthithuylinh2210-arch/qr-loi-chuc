@@ -6,69 +6,71 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 body{
-  margin:0;min-height:100vh;display:grid;place-items:center;
+  margin:0;min-height:100vh;
+  display:grid;place-items:center;
   background:radial-gradient(circle at top,#1b2b5a,#0b1020);
   color:#fff;font-family:system-ui
 }
 .card{
   width:min(520px,92vw);
   background:rgba(255,255,255,.08);
-  border-radius:18px;padding:18px;
+  border-radius:20px;padding:20px;
   box-shadow:0 25px 60px rgba(0,0,0,.6);
   text-align:center
 }
 textarea{
-  width:100%;height:100px;
-  border-radius:12px;border:none;
-  padding:10px;font-size:14px
+  width:100%;height:110px;
+  border-radius:14px;border:none;
+  padding:12px;font-size:15px
 }
 button{
-  margin-top:10px;
+  margin-top:12px;
   background:#22c55e;border:none;
-  padding:10px 18px;border-radius:14px;
-  font-size:15px;font-weight:700;cursor:pointer
+  padding:12px 20px;border-radius:16px;
+  font-size:16px;font-weight:700;cursor:pointer
 }
-#qr{margin-top:15px}
-.small{font-size:12px;opacity:.8;margin-top:6px}
+#qr{margin-top:18px}
 </style>
 </head>
 <body>
 <div class="card">
 <h2>🎄 Tạo QR lời chúc Giáng Sinh</h2>
 
-<textarea id="msg">Chúc bạn Giáng Sinh an lành 🎄✨ và năm mới tràn đầy niềm vui!</textarea>
+<textarea id="msg">Chúc bạn Giáng Sinh an lành 🎄✨ và năm mới nhiều may mắn!</textarea>
 <br>
 <button onclick="makeQR()">Tạo QR</button>
 
 <div id="qr"></div>
-<div class="small">📱 Quét bằng điện thoại để mở lời chúc</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
 async function makeQR(){
-  const text=document.getElementById("msg").value;
+  const text=document.getElementById("msg").value.trim();
   const url=new URL("greeting.html",location.href);
   url.searchParams.set("m",text);
 
-  document.getElementById("qr").innerHTML="";
+  const qrDiv=document.getElementById("qr");
+  qrDiv.innerHTML="";
   const canvas=document.createElement("canvas");
-  document.getElementById("qr").appendChild(canvas);
+  qrDiv.appendChild(canvas);
 
   await QRCode.toCanvas(canvas,url.toString(),{
     width:260,
+    margin:2,
     color:{
       dark:"#22c55e",
       light:"#0b1020"
     }
   });
 
-  // logo giữa QR
+  // LOGO GIỮA QR
   const ctx=canvas.getContext("2d");
   const img=new Image();
+  img.crossOrigin="anonymous";
   img.src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Christmas_tree_icon.svg/512px-Christmas_tree_icon.svg.png";
   img.onload=()=>{
-    const s=60;
+    const s=56;
     ctx.drawImage(img,(canvas.width-s)/2,(canvas.height-s)/2,s,s);
   }
 }
