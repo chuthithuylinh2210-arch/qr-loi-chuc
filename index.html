@@ -33,47 +33,54 @@ button{
 </style>
 </head>
 <body>
+
 <div class="card">
-<h2>🎄 Tạo QR lời chúc Giáng Sinh</h2>
+  <h2>🎄 Tạo QR lời chúc Giáng Sinh</h2>
 
-<textarea id="msg">Chúc bạn Giáng Sinh an lành 🎄✨ và năm mới nhiều may mắn!</textarea>
-<br>
-<button onclick="makeQR()">Tạo QR</button>
+  <textarea id="msg">Chúc bạn Giáng Sinh an lành 🎄✨ và năm mới nhiều may mắn!</textarea>
+  <br>
+  <button onclick="makeQR()">Tạo QR</button>
 
-<div id="qr"></div>
+  <div id="qr"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
 async function makeQR(){
-  const text=document.getElementById("msg").value.trim();
-  const url=new URL("greeting.html",location.href);
-  url.searchParams.set("m",text);
+  const text = document.getElementById("msg").value.trim() 
+               || "Chúc bạn Giáng Sinh an lành 🎄";
 
-  const qrDiv=document.getElementById("qr");
-  qrDiv.innerHTML="";
-  const canvas=document.createElement("canvas");
+  // 🔴 QUAN TRỌNG: QR TRỎ THẲNG greeting.html
+  const url =
+    "https://chuthithuylinh2210-arch.github.io/qr-loi-chuc/greeting.html?m="
+    + encodeURIComponent(text);
+
+  const qrDiv = document.getElementById("qr");
+  qrDiv.innerHTML = "";
+  const canvas = document.createElement("canvas");
   qrDiv.appendChild(canvas);
 
-  await QRCode.toCanvas(canvas,url.toString(),{
-    width:260,
-    margin:2,
-    color:{
-      dark:"#22c55e",
-      light:"#0b1020"
+  await QRCode.toCanvas(canvas, url, {
+    width: 260,
+    margin: 2,
+    color: {
+      dark: "#22c55e",   // màu QR
+      light: "#0b1020"
     }
   });
 
-  // LOGO GIỮA QR
-  const ctx=canvas.getContext("2d");
-  const img=new Image();
-  img.crossOrigin="anonymous";
-  img.src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Christmas_tree_icon.svg/512px-Christmas_tree_icon.svg.png";
-  img.onload=()=>{
-    const s=56;
-    ctx.drawImage(img,(canvas.width-s)/2,(canvas.height-s)/2,s,s);
-  }
+  // 🎄 LOGO CÂY THÔNG GIỮA QR
+  const ctx = canvas.getContext("2d");
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Christmas_tree_icon.svg/512px-Christmas_tree_icon.svg.png";
+  img.onload = () => {
+    const s = 56;
+    ctx.drawImage(img, (canvas.width-s)/2, (canvas.height-s)/2, s, s);
+  };
 }
+
 makeQR();
 </script>
 </body>
