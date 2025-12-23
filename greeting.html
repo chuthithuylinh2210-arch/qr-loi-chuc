@@ -6,105 +6,71 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-/* ===== NỀN CHUNG ===== */
+/* ===== BODY ===== */
 body{
   margin:0;
   overflow:hidden;
-  background:linear-gradient(#0b1020,#000);
+  background:#000;          /* 👈 NỀN ĐEN */
   font-family:system-ui;
-  color:#fff;
+  color:#fff;               /* 👈 CHỮ TRẮNG */
 }
 
-/* ===== CANVAS TUYẾT + PHÁO HOA (Ở DƯỚI) ===== */
-#fx{
+/* ===== CANVAS TUYẾT ===== */
+#snow{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:0;          /* 👈 QUAN TRỌNG */
+  z-index:0;
 }
 
-/* ===== NỘI DUNG (Ở TRÊN CANVAS) ===== */
+/* ===== NỘI DUNG ===== */
 .center{
   position:absolute;
   inset:0;
   display:grid;
   place-items:center;
   text-align:center;
-  z-index:1;          /* 👈 QUAN TRỌNG */
+  z-index:1;
 }
 
 /* ===== CARD ===== */
 .card{
-  background:rgba(255,255,255,.9);
-  padding:24px;
-  border-radius:22px;
-  box-shadow:0 30px 80px rgba(0,0,0,.7);
+  background:rgba(0,0,0,0.65);
+  padding:26px;
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8);
   max-width:520px;
 }
 
 /* ===== CÂY THÔNG ===== */
 .tree{
-  font-size:96px;
-  animation:shake 3s infinite ease-in-out;
-}
-@keyframes shake{
-  0%,100%{transform:rotate(0)}
-  50%{transform:rotate(4deg)}
+  font-size:90px;
+  margin-bottom:10px;
 }
 
 /* ===== LỜI CHÚC ===== */
 .message{
-  margin-top:14px;
-  font-size:18px;
-  color:#0b1020;      /* 👈 CHỮ ĐEN */
-  background:#ffffff;
-  padding:12px 16px;
-  border-radius:14px;
-}
-
-/* ===== NÚT NHẠC ===== */
-button{
-  margin-top:14px;
-  padding:10px 18px;
-  border-radius:14px;
-  border:none;
-  background:#22c55e;
-  color:#000;
-  font-weight:700;
-  cursor:pointer;
-}
-
-/* ===== QUÀ RƠI ===== */
-.gift{
-  position:absolute;
-  font-size:32px;
-  animation:fall linear forwards;
-}
-@keyframes fall{
-  to{transform:translateY(120vh)}
+  margin-top:12px;
+  font-size:20px;
+  color:#fff;
+  line-height:1.4;
 }
 </style>
 </head>
 
 <body>
 
-<!-- CANVAS HIỆU ỨNG -->
-<canvas id="fx"></canvas>
+<!-- TUYẾT -->
+<canvas id="snow"></canvas>
 
 <!-- NỘI DUNG -->
 <div class="center">
   <div class="card">
     <div class="tree">🎄</div>
-    <h2>🎉 Lời chúc dành cho bạn</h2>
+    <h2>Lời chúc dành cho bạn</h2>
     <div id="msg" class="message"></div>
-    <button onclick="playMusic()">🔊 Bật nhạc Noel</button>
   </div>
 </div>
-
-<!-- NHẠC -->
-<audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_3e6c65fd19.mp3">
-</audio>
 
 <script>
 /* ===== HIỆN LỜI CHÚC ===== */
@@ -112,14 +78,11 @@ const params = new URLSearchParams(location.search);
 document.getElementById("msg").textContent =
   params.get("m") || "Chúc bạn Giáng Sinh an lành 🎄";
 
-/* ===== NHẠC ===== */
-const music = document.getElementById("music");
-function playMusic(){ music.play(); }
-
-/* ===== CANVAS SETUP ===== */
-const c = document.getElementById("fx");
+/* ===== TUYẾT RƠI ===== */
+const c = document.getElementById("snow");
 const ctx = c.getContext("2d");
 let w,h;
+
 function resize(){
   w = c.width = window.innerWidth;
   h = c.height = window.innerHeight;
@@ -127,9 +90,8 @@ function resize(){
 resize();
 window.onresize = resize;
 
-/* ===== TUYẾT ===== */
 let snow=[];
-for(let i=0;i<140;i++){
+for(let i=0;i<120;i++){
   snow.push({
     x:Math.random()*w,
     y:Math.random()*h,
@@ -143,7 +105,7 @@ function draw(){
   ctx.fillStyle="white";
   snow.forEach(f=>{
     ctx.beginPath();
-    ctx.arc(f.x,f.y,f.r,0,6.28);
+    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
     ctx.fill();
     f.y+=f.s;
     if(f.y>h) f.y=0;
@@ -151,28 +113,6 @@ function draw(){
   requestAnimationFrame(draw);
 }
 draw();
-
-/* ===== PHÁO HOA KHI MỞ ===== */
-for(let i=0;i<90;i++){
-  setTimeout(()=>{
-    ctx.fillStyle=`hsl(${Math.random()*360},100%,70%)`;
-    ctx.beginPath();
-    ctx.arc(Math.random()*w,Math.random()*h/2,4,0,6.28);
-    ctx.fill();
-  },i*30);
-}
-
-/* ===== QUÀ RƠI KHI CHẠM ===== */
-document.body.onclick = ()=>{
-  const g = document.createElement("div");
-  g.className="gift";
-  g.textContent="🎁";
-  g.style.left=Math.random()*innerWidth+"px";
-  g.style.top="-40px";
-  g.style.animationDuration=2+Math.random()*2+"s";
-  document.body.appendChild(g);
-  setTimeout(()=>g.remove(),4000);
-};
 </script>
 
 </body>
