@@ -10,36 +10,43 @@ body{
   background:linear-gradient(#0b1020,#000);
   font-family:system-ui;color:#fff
 }
-#snow{position:fixed;inset:0;pointer-events:none}
+#fx{position:fixed;inset:0;pointer-events:none}
 .center{
   position:absolute;inset:0;
   display:grid;place-items:center;text-align:center
 }
 .card{
   background:rgba(255,255,255,.08);
-  padding:22px;border-radius:20px;
-  box-shadow:0 30px 80px rgba(0,0,0,.6);
-  max-width:500px
+  padding:24px;border-radius:22px;
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+  max-width:520px
 }
 .tree{
-  font-size:90px;
+  font-size:96px;
   animation:shake 3s infinite ease-in-out
 }
 @keyframes shake{
   0%,100%{transform:rotate(0)}
-  50%{transform:rotate(3deg)}
+  50%{transform:rotate(4deg)}
 }
 button{
-  margin-top:12px;
-  padding:8px 14px;border-radius:12px;
+  margin-top:14px;
+  padding:10px 18px;border-radius:14px;
   border:none;background:#22c55e;
   color:#000;font-weight:700;cursor:pointer
+}
+.gift{
+  position:absolute;font-size:32px;
+  animation:fall linear forwards
+}
+@keyframes fall{
+  to{transform:translateY(120vh)}
 }
 </style>
 </head>
 <body>
 
-<canvas id="snow"></canvas>
+<canvas id="fx"></canvas>
 
 <div class="center">
   <div class="card">
@@ -51,54 +58,67 @@ button{
 </div>
 
 <audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_3e6c65fd19.mp3?filename=christmas-village-126776.mp3">
+  <source src="https://cdn.pixabay.com/download/audio/2022/12/06/audio_3e6c65fd19.mp3">
 </audio>
 
 <script>
-// lấy lời chúc
+// LẤY LỜI CHÚC
 const p=new URLSearchParams(location.search);
 document.getElementById("msg").textContent=
   p.get("m")||"Chúc bạn Giáng Sinh an lành 🎄";
 
-// nhạc
+// NHẠC
 const music=document.getElementById("music");
 music.play().catch(()=>{});
+function playMusic(){music.play();}
 
-// tuyết rơi
-const c=document.getElementById("snow");
+// CANVAS
+const c=document.getElementById("fx");
 const ctx=c.getContext("2d");
-let w,h,flakes=[];
-function resize(){
-  w=c.width=innerWidth;
-  h=c.height=innerHeight;
-}
-window.onresize=resize;resize();
+let w,h;
+function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
+resize();window.onresize=resize;
 
-for(let i=0;i<120;i++){
-  flakes.push({
-    x:Math.random()*w,
-    y:Math.random()*h,
-    r:1+Math.random()*3,
-    s:0.5+Math.random()
-  });
-}
-function drawSnow(){
+// TUYẾT + PHÁO HOA
+let snow=[];
+for(let i=0;i<150;i++)
+  snow.push({x:Math.random()*w,y:Math.random()*h,r:1+Math.random()*3,s:0.5+Math.random()});
+
+function draw(){
   ctx.clearRect(0,0,w,h);
   ctx.fillStyle="white";
-  flakes.forEach(f=>{
+  snow.forEach(f=>{
     ctx.beginPath();
     ctx.arc(f.x,f.y,f.r,0,6.28);
     ctx.fill();
     f.y+=f.s;
     if(f.y>h) f.y=0;
   });
-  requestAnimationFrame(drawSnow);
+  requestAnimationFrame(draw);
 }
-drawSnow();
+draw();
 
-function playMusic(){
-  music.play();
+// PHÁO HOA
+for(let i=0;i<60;i++){
+  setTimeout(()=>{
+    ctx.fillStyle=`hsl(${Math.random()*360},100%,70%)`;
+    ctx.beginPath();
+    ctx.arc(Math.random()*w,Math.random()*h/2,4,0,6.28);
+    ctx.fill();
+  },i*40);
 }
+
+// QUÀ RƠI KHI CHẠM
+document.body.onclick=()=>{
+  const g=document.createElement("div");
+  g.className="gift";
+  g.textContent="🎁";
+  g.style.left=Math.random()*innerWidth+"px";
+  g.style.top="-40px";
+  g.style.animationDuration=2+Math.random()*2+"s";
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(),4000);
+};
 </script>
 </body>
 </html>
