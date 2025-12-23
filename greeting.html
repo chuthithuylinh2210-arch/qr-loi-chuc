@@ -10,12 +10,12 @@
 body{
   margin:0;
   overflow:hidden;
-  background:#000;          /* nền đen */
+  background:#000;
   font-family:system-ui;
-  color:#fff;               /* chữ trắng */
+  color:#fff;
 }
 
-/* ===== CANVAS TUYẾT ===== */
+/* ===== TUYẾT ===== */
 #snow{
   position:fixed;
   inset:0;
@@ -30,7 +30,7 @@ body{
   display:grid;
   place-items:center;
   text-align:center;
-  z-index:1;
+  z-index:2;
 }
 
 /* ===== CARD ===== */
@@ -52,17 +52,32 @@ body{
 .message{
   margin-top:12px;
   font-size:20px;
-  color:#fff;
   line-height:1.4;
+}
+
+/* ===== ÔNG GIÀ NOEL + TUẦN LỘC ===== */
+#santa{
+  position:fixed;
+  top:40px;
+  left:-200px;
+  font-size:64px;
+  z-index:1;
+  animation:fly 15s linear infinite;
+}
+
+@keyframes fly{
+  0%{transform:translateX(-200px)}
+  100%{transform:translateX(120vw)}
 }
 
 /* ===== HỘP QUÀ ===== */
 .gift{
   position:fixed;
   top:-40px;
-  font-size:32px;
+  font-size:34px;
+  cursor:pointer;
   animation:fall linear forwards;
-  z-index:2;
+  z-index:3;
 }
 
 @keyframes fall{
@@ -70,6 +85,32 @@ body{
     transform:translateY(120vh);
     opacity:0;
   }
+}
+
+/* ===== POPUP LỜI CHÚC ===== */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:grid;
+  place-items:center;
+  z-index:10;
+}
+.popup-box{
+  background:#fff;
+  color:#000;
+  padding:24px;
+  border-radius:18px;
+  max-width:320px;
+  text-align:center;
+}
+.popup-box button{
+  margin-top:14px;
+  padding:8px 16px;
+  border:none;
+  border-radius:12px;
+  background:#22c55e;
+  font-weight:700;
 }
 </style>
 </head>
@@ -79,6 +120,9 @@ body{
 <!-- TUYẾT -->
 <canvas id="snow"></canvas>
 
+<!-- ÔNG GIÀ NOEL + TUẦN LỘC -->
+<div id="santa">🦌🦌🎅🛷</div>
+
 <!-- NỘI DUNG -->
 <div class="center">
   <div class="card">
@@ -86,16 +130,25 @@ body{
     <h2>Lời chúc dành cho bạn</h2>
     <div id="msg" class="message"></div>
     <div style="opacity:.7;font-size:13px;margin-top:10px">
-      👆 Nhấp vào màn hình để nhận quà
+      👆 Nhấn màn hình để gọi quà – chạm 🎁 để mở
     </div>
   </div>
 </div>
 
 <script>
-/* ===== HIỆN LỜI CHÚC ===== */
+/* ===== LỜI CHÚC CHÍNH ===== */
 const params = new URLSearchParams(location.search);
 document.getElementById("msg").textContent =
   params.get("m") || "Chúc bạn Giáng Sinh an lành 🎄";
+
+/* ===== LỜI CHÚC RANDOM ===== */
+const randomWishes = [
+  "🎁 Chúc bạn luôn vui vẻ và hạnh phúc!",
+  "✨ Mong mọi điều tốt đẹp sẽ đến với bạn!",
+  "🎄 Giáng Sinh ấm áp bên gia đình nhé!",
+  "💖 Chúc bạn năm mới tràn đầy năng lượng!",
+  "🌟 Ước mơ của bạn sẽ sớm thành hiện thực!"
+];
 
 /* ===== TUYẾT RƠI ===== */
 const c = document.getElementById("snow");
@@ -103,8 +156,8 @@ const ctx = c.getContext("2d");
 let w,h;
 
 function resize(){
-  w = c.width = window.innerWidth;
-  h = c.height = window.innerHeight;
+  w = c.width = innerWidth;
+  h = c.height = innerHeight;
 }
 resize();
 window.onresize = resize;
@@ -133,17 +186,41 @@ function drawSnow(){
 }
 drawSnow();
 
-/* ===== NHẤP MÀN HÌNH → QUÀ RƠI ===== */
+/* ===== NHẤN → QUÀ RƠI ===== */
 document.body.addEventListener("click", ()=>{
   const gift = document.createElement("div");
   gift.className = "gift";
   gift.textContent = "🎁";
-  gift.style.left = Math.random() * (window.innerWidth - 40) + "px";
-  gift.style.animationDuration = (2 + Math.random()*2) + "s";
+  gift.style.left = Math.random()*(innerWidth-40)+"px";
+  gift.style.animationDuration = (2+Math.random()*2)+"s";
   document.body.appendChild(gift);
 
-  setTimeout(()=>gift.remove(), 4000);
+  gift.onclick = (e)=>{
+    e.stopPropagation();
+    gift.remove();
+    showWish();
+  };
+
+  setTimeout(()=>gift.remove(),4000);
 });
+
+/* ===== HIỆN LỜI CHÚC RANDOM ===== */
+function showWish(){
+  const popup = document.createElement("div");
+  popup.className = "popup";
+
+  const box = document.createElement("div");
+  box.className = "popup-box";
+  box.innerHTML = `
+    <h3>🎉 Bất ngờ nè!</h3>
+    <p>${randomWishes[Math.floor(Math.random()*randomWishes.length)]}</p>
+    <button>Đóng</button>
+  `;
+
+  box.querySelector("button").onclick = ()=>popup.remove();
+  popup.appendChild(box);
+  document.body.appendChild(popup);
+}
 </script>
 
 </body>
