@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tạo QR lời chúc</title>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b1020;color:#eaf2ff;font-family:system-ui}
+    .card{width:min(560px,92vw);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+    h1{margin:0 0 10px;font-size:18px}
+    textarea{width:100%;height:110px;border-radius:12px;border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.25);color:#fff;padding:10px;resize:vertical}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center}
+    button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;background:#2563eb;color:#fff;font-weight:700}
+    .muted{opacity:.8;font-size:12px}
+    #qr{margin-top:14px;display:grid;place-items:center;padding:14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.18)}
+    input{border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.25);color:#fff;padding:10px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📌 Tạo mã QR mở ra lời chúc</h1>
+
+    <div class="muted">Nhập lời chúc (khi quét QR sẽ mở trang <code>greeting.html</code> để hiển thị).</div>
+    <textarea id="msg">Chúc bạn Giáng Sinh an lành 🎄✨ và năm mới nhiều may mắn!</textarea>
+
+    <div class="row">
+      <button id="gen">Tạo QR</button>
+      <span class="muted">Cỡ QR:</span>
+      <input id="size" type="number" value="260" min="140" max="600" style="width:110px">
+      <span class="muted">(chạy bằng Live Server)</span>
+    </div>
+
+    <div id="qr" aria-label="QR code area"></div>
+
+    <div class="muted" style="margin-top:10px">
+      ✅ Mẹo: nếu bạn muốn quét bằng điện thoại khác máy, hãy dùng QR này sau khi bạn deploy lên GitHub Pages / Netlify (mình hướng dẫn được).
+    </div>
+  </div>
+
+  <!-- thư viện tạo QR -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function buildUrlFromMessage(message){
+      // Tạo URL tới greeting.html kèm query ?m=
+      const base = new URL("greeting.html", window.location.href);
+      base.searchParams.set("m", message);
+      return base.toString();
+    }
+
+    async function renderQR(){
+      const message = $("msg").value.trim() || "Chúc bạn một ngày vui vẻ!";
+      const size = Math.max(140, Math.min(600, Number($("size").value) || 260));
+      const url = buildUrlFromMessage(message);
+
+      $("qr").innerHTML = "";
+      const canvas = document.createElement("canvas");
+      $("qr").appendChild(canvas);
+
+      await QRCode.toCanvas(canvas, url, {
+        width: size,
+        margin: 2,
+        errorCorrectionLevel: "M"
+      });
+
+      // Hiển thị link để bạn test
+      const p = document.createElement("div");
+      p.className = "muted";
+      p.style.marginTop = "10px";
+      p.textContent = "Link trong QR: " + url;
+      $("qr").appendChild(p);
+    }
+
+    $("gen").addEventListener("click", renderQR);
+    renderQR(); // tạo sẵn khi mở trang
+  </script>
+</body>
+</html>
