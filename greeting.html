@@ -10,9 +10,9 @@
 body{
   margin:0;
   overflow:hidden;
-  background:#000;          /* 👈 NỀN ĐEN */
+  background:#000;          /* nền đen */
   font-family:system-ui;
-  color:#fff;               /* 👈 CHỮ TRẮNG */
+  color:#fff;               /* chữ trắng */
 }
 
 /* ===== CANVAS TUYẾT ===== */
@@ -55,6 +55,22 @@ body{
   color:#fff;
   line-height:1.4;
 }
+
+/* ===== HỘP QUÀ ===== */
+.gift{
+  position:fixed;
+  top:-40px;
+  font-size:32px;
+  animation:fall linear forwards;
+  z-index:2;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(120vh);
+    opacity:0;
+  }
+}
 </style>
 </head>
 
@@ -67,8 +83,11 @@ body{
 <div class="center">
   <div class="card">
     <div class="tree">🎄</div>
-    <h2>Lời chúc dành cho bạn:</h2>
+    <h2>Lời chúc dành cho bạn</h2>
     <div id="msg" class="message"></div>
+    <div style="opacity:.7;font-size:13px;margin-top:10px">
+      👆 Nhấp vào màn hình để nhận quà
+    </div>
   </div>
 </div>
 
@@ -100,7 +119,7 @@ for(let i=0;i<120;i++){
   });
 }
 
-function draw(){
+function drawSnow(){
   ctx.clearRect(0,0,w,h);
   ctx.fillStyle="white";
   snow.forEach(f=>{
@@ -110,11 +129,22 @@ function draw(){
     f.y+=f.s;
     if(f.y>h) f.y=0;
   });
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawSnow);
 }
-draw();
+drawSnow();
+
+/* ===== NHẤP MÀN HÌNH → QUÀ RƠI ===== */
+document.body.addEventListener("click", ()=>{
+  const gift = document.createElement("div");
+  gift.className = "gift";
+  gift.textContent = "🎁";
+  gift.style.left = Math.random() * (window.innerWidth - 40) + "px";
+  gift.style.animationDuration = (2 + Math.random()*2) + "s";
+  document.body.appendChild(gift);
+
+  setTimeout(()=>gift.remove(), 4000);
+});
 </script>
 
 </body>
 </html>
-
