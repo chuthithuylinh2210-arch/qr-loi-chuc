@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-/* ===== BODY ===== */
 body{
   margin:0;
   overflow:hidden;
@@ -15,7 +14,7 @@ body{
   color:#fff;
 }
 
-/* ===== TUYẾT ===== */
+/* ❄️ TUYẾT */
 #snow{
   position:fixed;
   inset:0;
@@ -23,7 +22,22 @@ body{
   z-index:0;
 }
 
-/* ===== NỘI DUNG ===== */
+/* 🎅🦌 SANTA CƯỠI TUẦN LỘC */
+#santa{
+  position:fixed;
+  top:40px;
+  left:-320px;
+  font-size:56px;
+  white-space:nowrap;
+  z-index:5;
+  animation:fly 16s linear infinite;
+}
+
+@keyframes fly{
+  to{ transform:translateX(120vw); }
+}
+
+/* 📦 CARD */
 .center{
   position:absolute;
   inset:0;
@@ -33,51 +47,32 @@ body{
   z-index:2;
 }
 
-/* ===== CARD ===== */
 .card{
-  background:rgba(0,0,0,0.65);
+  background:rgba(0,0,0,.65);
   padding:26px;
-  border-radius:20px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+  border-radius:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);
   max-width:520px;
 }
 
-/* ===== CÂY THÔNG ===== */
 .tree{
-  font-size:90px;
-  margin-bottom:10px;
+  font-size:88px;
 }
 
-/* ===== LỜI CHÚC ===== */
 .message{
-  margin-top:12px;
+  margin-top:14px;
   font-size:20px;
   line-height:1.4;
 }
 
-/* ===== ÔNG GIÀ NOEL + TUẦN LỘC ===== */
-#santa{
-  position:fixed;
-  top:40px;
-  left:-200px;
-  font-size:64px;
-  z-index:1;
-  animation:fly 15s linear infinite;
-}
-
-@keyframes fly{
-  0%{transform:translateX(-200px)}
-  100%{transform:translateX(120vw)}
-}
-
-/* ===== HỘP QUÀ ===== */
+/* 🎁 HỘP QUÀ */
 .gift{
   position:fixed;
   top:-40px;
   font-size:34px;
   cursor:pointer;
-  animation:fall linear forwards;
   z-index:3;
+  animation:fall linear forwards;
 }
 
 @keyframes fall{
@@ -87,43 +82,35 @@ body{
   }
 }
 
-/* ===== POPUP LỜI CHÚC ===== */
+/* 💬 POPUP */
 .popup{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,.7);
   display:grid;
   place-items:center;
   z-index:10;
 }
-.popup-box{
-  background:#fff;
-  color:#000;
-  padding:24px;
+
+.popup div{
+  background:#111;
+  padding:22px;
   border-radius:18px;
   max-width:320px;
   text-align:center;
-}
-.popup-box button{
-  margin-top:14px;
-  padding:8px 16px;
-  border:none;
-  border-radius:12px;
-  background:#22c55e;
-  font-weight:700;
 }
 </style>
 </head>
 
 <body>
 
-<!-- TUYẾT -->
+<!-- ❄️ TUYẾT -->
 <canvas id="snow"></canvas>
 
-<!-- ÔNG GIÀ NOEL + TUẦN LỘC -->
-<div id="santa">🦌🦌🎅🛷</div>
+<!-- 🎅🛷🦌🦌 ÔNG GIÀ NOEL CƯỠI TUẦN LỘC -->
+<div id="santa">🎅🛷🦌🦌</div>
 
-<!-- NỘI DUNG -->
+<!-- 📦 NỘI DUNG -->
 <div class="center">
   <div class="card">
     <div class="tree">🎄</div>
@@ -136,31 +123,26 @@ body{
 </div>
 
 <script>
-/* ===== LỜI CHÚC CHÍNH ===== */
+/* 🎉 LỜI CHÚC CHÍNH TỪ QR */
 const params = new URLSearchParams(location.search);
 document.getElementById("msg").textContent =
   params.get("m") || "Chúc bạn Giáng Sinh an lành 🎄";
 
-/* ===== LỜI CHÚC RANDOM ===== */
-const randomWishes = [
-  "🎁 Chúc bạn luôn vui vẻ và hạnh phúc!",
-  "✨ Mong mọi điều tốt đẹp sẽ đến với bạn!",
-  "🎄 Giáng Sinh ấm áp bên gia đình nhé!",
-  "💖 Chúc bạn năm mới tràn đầy năng lượng!",
-  "🌟 Ước mơ của bạn sẽ sớm thành hiện thực!"
+/* 🎁 LỜI CHÚC RANDOM */
+const wishes=[
+  "🎄 Chúc bạn một mùa Noel thật ấm áp!",
+  "🎁 Mong mọi điều tốt đẹp sẽ đến với bạn!",
+  "✨ Chúc bạn luôn vui vẻ và bình an!",
+  "❄️ Giáng Sinh an lành bên gia đình!",
+  "🎅 Điều ước của bạn sẽ thành hiện thực!"
 ];
 
-/* ===== TUYẾT RƠI ===== */
-const c = document.getElementById("snow");
-const ctx = c.getContext("2d");
+/* ❄️ TUYẾT */
+const c=document.getElementById("snow");
+const ctx=c.getContext("2d");
 let w,h;
-
-function resize(){
-  w = c.width = innerWidth;
-  h = c.height = innerHeight;
-}
-resize();
-window.onresize = resize;
+function resize(){ w=c.width=innerWidth; h=c.height=innerHeight }
+resize(); onresize=resize;
 
 let snow=[];
 for(let i=0;i<120;i++){
@@ -172,7 +154,7 @@ for(let i=0;i<120;i++){
   });
 }
 
-function drawSnow(){
+(function draw(){
   ctx.clearRect(0,0,w,h);
   ctx.fillStyle="white";
   snow.forEach(f=>{
@@ -182,45 +164,43 @@ function drawSnow(){
     f.y+=f.s;
     if(f.y>h) f.y=0;
   });
-  requestAnimationFrame(drawSnow);
-}
-drawSnow();
+  requestAnimationFrame(draw);
+})();
 
-/* ===== NHẤN → QUÀ RƠI ===== */
-document.body.addEventListener("click", ()=>{
-  const gift = document.createElement("div");
-  gift.className = "gift";
-  gift.textContent = "🎁";
-  gift.style.left = Math.random()*(innerWidth-40)+"px";
-  gift.style.animationDuration = (2+Math.random()*2)+"s";
-  document.body.appendChild(gift);
+/* 🎁 TẠO QUÀ */
+function spawnGift(x=null){
+  const g=document.createElement("div");
+  g.className="gift";
+  g.textContent="🎁";
+  g.style.left=(x ?? Math.random()*innerWidth)+"px";
+  g.style.animationDuration=(2+Math.random()*2)+"s";
 
-  gift.onclick = (e)=>{
+  g.onclick=e=>{
     e.stopPropagation();
-    gift.remove();
+    g.remove();
     showWish();
   };
 
-  setTimeout(()=>gift.remove(),4000);
-});
-
-/* ===== HIỆN LỜI CHÚC RANDOM ===== */
-function showWish(){
-  const popup = document.createElement("div");
-  popup.className = "popup";
-
-  const box = document.createElement("div");
-  box.className = "popup-box";
-  box.innerHTML = `
-    <h3>🎉 Bất ngờ nè!</h3>
-    <p>${randomWishes[Math.floor(Math.random()*randomWishes.length)]}</p>
-    <button>Đóng</button>
-  `;
-
-  box.querySelector("button").onclick = ()=>popup.remove();
-  popup.appendChild(box);
-  document.body.appendChild(popup);
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(),5000);
 }
+
+/* 💬 POPUP */
+function showWish(){
+  const p=document.createElement("div");
+  p.className="popup";
+  p.innerHTML=`<div>
+    ${wishes[Math.floor(Math.random()*wishes.length)]}
+    <br><br>
+    <button onclick="this.parentNode.parentNode.remove()">Đóng</button>
+  </div>`;
+  document.body.appendChild(p);
+}
+
+/* 👆 NHẤN MÀN HÌNH → QUÀ RƠI */
+document.body.addEventListener("click",e=>{
+  spawnGift(e.clientX);
+});
 </script>
 
 </body>
