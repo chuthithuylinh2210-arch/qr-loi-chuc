@@ -41,6 +41,15 @@ button{
 }
 @keyframes fall{
   to{transform:translateY(120vh)}
+  .message{
+  margin-top:12px;
+  font-size:18px;
+  color:#0b1020;        /* CHỮ ĐEN */
+  background:#ffffff;  /* NỀN TRẮNG */
+  padding:12px 16px;
+  border-radius:14px;
+}
+
 }
 </style>
 </head>
@@ -52,7 +61,7 @@ button{
   <div class="card">
     <div class="tree">🎄</div>
     <h2>🎉 Lời chúc dành cho bạn</h2>
-    <div id="msg"></div>
+    <div id="msg" class="message"></div>
     <button onclick="playMusic()">🔊 Bật nhạc Noel</button>
   </div>
 </div>
@@ -130,3 +139,4 @@ document.body.onclick=()=>{
 </script>
 </body>
 </html>
+
