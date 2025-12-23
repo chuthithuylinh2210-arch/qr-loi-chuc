@@ -19,17 +19,18 @@ body{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:0;
+  z-index:1;
 }
 
-/* 🎅🦌 SANTA CƯỠI TUẦN LỘC */
+/* 🎅🦌 SANTA */
 #santa{
   position:fixed;
   top:40px;
-  left:-320px;
+  left:-340px;
   font-size:56px;
   white-space:nowrap;
   z-index:5;
+  pointer-events:none;
   animation:fly 16s linear infinite;
 }
 
@@ -55,9 +56,7 @@ body{
   max-width:520px;
 }
 
-.tree{
-  font-size:88px;
-}
+.tree{ font-size:88px; }
 
 .message{
   margin-top:14px;
@@ -76,10 +75,7 @@ body{
 }
 
 @keyframes fall{
-  to{
-    transform:translateY(120vh);
-    opacity:0;
-  }
+  to{ transform:translateY(120vh); opacity:0; }
 }
 
 /* 💬 POPUP */
@@ -104,13 +100,11 @@ body{
 
 <body>
 
-<!-- ❄️ TUYẾT -->
 <canvas id="snow"></canvas>
 
-<!-- 🎅🛷🦌🦌 ÔNG GIÀ NOEL CƯỠI TUẦN LỘC -->
+<!-- 🎅🛷🦌🦌 -->
 <div id="santa">🎅🛷🦌🦌</div>
 
-<!-- 📦 NỘI DUNG -->
 <div class="center">
   <div class="card">
     <div class="tree">🎄</div>
@@ -123,18 +117,19 @@ body{
 </div>
 
 <script>
-/* 🎉 LỜI CHÚC CHÍNH TỪ QR */
+// 🎉 LỜI CHÚC TỪ QR
 const params = new URLSearchParams(location.search);
 document.getElementById("msg").textContent =
   params.get("m") || "Chúc bạn Giáng Sinh an lành 🎄";
 
-/* 🎁 LỜI CHÚC RANDOM */
-const wishes=[
+// 🎁 LỜI CHÚC RANDOM (ĐÃ FIX DẤU ,)
+const wishes = [
   "🎄 Ăn cứt cả năm nhé!",
   "🎁 Tiền ra như thủy điện xả lũ!",
   "✨ Bạn đạt được danh hiệu rắn độc!",
   "❄️ Cho người chúc 2 quả thận!",
-  "🎅 Điều ước của bạn không bh thành hiện thực!"
+  "🎅 Điều ước của bạn không bao giờ thành hiện thực!",
+
   "🎄 Noel vui vẻ, tiền vô như tuyết rơi mà tiền ra thì rơi không phanh.",
   "🎅 Mong ông già Noel mang quà, chứ đừng mang deadline.",
   "🎁 Chúc ăn Noel không tăng cân, yêu Noel không bị seen.",
@@ -149,7 +144,8 @@ const wishes=[
   "❄️ Noel không người yêu thì đừng buồn, nhiều người cũng vậy.",
   "🎄 Ngủ một giấc là hết buồn, thức dậy là hết tiền.",
   "🎅 Santa mang sức khỏe, còn tiền thì tự xoay.",
-  "🎁 Cười nhiều như tuyết rơi, khóc ít hơn hóa đơn cuối tháng."
+  "🎁 Cười nhiều như tuyết rơi, khóc ít hơn hóa đơn cuối tháng.",
+
   "🎄 Chúc bạn Noel vui vẻ, sang năm vẫn vậy cho đỡ bỡ ngỡ.",
   "🎅 Chúc bạn đạt được mọi thứ… trừ thứ bạn đang cần nhất.",
   "🎁 Mong ví bạn mỏng như giấy, nhưng hóa đơn dày như sách giáo khoa.",
@@ -166,20 +162,17 @@ const wishes=[
   "🎅 Mong bạn gặp nhiều may mắn, nhưng đừng hy vọng quá nhiều.",
   "🎁 Chúc bạn sống tốt… để còn chịu thêm vài mùa Noel nữa."
 ];
-const c=document.getElementById("snow");
-const ctx=c.getContext("2d");
+
+// ❄️ TUYẾT
+const c = document.getElementById("snow");
+const ctx = c.getContext("2d");
 let w,h;
 function resize(){ w=c.width=innerWidth; h=c.height=innerHeight }
 resize(); onresize=resize;
 
 let snow=[];
 for(let i=0;i<120;i++){
-  snow.push({
-    x:Math.random()*w,
-    y:Math.random()*h,
-    r:1+Math.random()*3,
-    s:0.5+Math.random()
-  });
+  snow.push({x:Math.random()*w,y:Math.random()*h,r:1+Math.random()*3,s:0.5+Math.random()});
 }
 
 (function draw(){
@@ -195,7 +188,7 @@ for(let i=0;i<120;i++){
   requestAnimationFrame(draw);
 })();
 
-/* 🎁 TẠO QUÀ */
+// 🎁 QUÀ
 function spawnGift(x=null){
   const g=document.createElement("div");
   g.className="gift";
@@ -213,7 +206,6 @@ function spawnGift(x=null){
   setTimeout(()=>g.remove(),5000);
 }
 
-/* 💬 POPUP */
 function showWish(){
   const p=document.createElement("div");
   p.className="popup";
@@ -225,7 +217,6 @@ function showWish(){
   document.body.appendChild(p);
 }
 
-/* 👆 NHẤN MÀN HÌNH → QUÀ RƠI */
 document.body.addEventListener("click",e=>{
   spawnGift(e.clientX);
 });
@@ -233,5 +224,3 @@ document.body.addEventListener("click",e=>{
 
 </body>
 </html>
-
-
